@@ -157,7 +157,7 @@ class GeventWorker(Worker):
             if job.get_status() == JobStatus.FINISHED:
                 queue.enqueue_dependents(job)
 
-        child_greenlet = self.gevent_pool.spawn(self.perform_job, job)
+        child_greenlet = self.gevent_pool.spawn(self.perform_job, job, queue)
         child_greenlet.link(job_done)
         self.children.append(child_greenlet)
 
