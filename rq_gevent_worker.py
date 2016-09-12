@@ -79,7 +79,7 @@ class GeventWorker(Worker):
     def set_current_job_id(self, job_id, pipeline=None):
         pass
 
-    def _work(self, burst=False):
+    def _work(self, burst=False, logging_level=logging.INFO):
         """Starts the work loop.
 
         Pops and performs all jobs on the current list of queues.  When all
@@ -88,7 +88,7 @@ class GeventWorker(Worker):
 
         The return value indicates whether any jobs were processed.
         """
-        setup_loghandlers()
+        setup_loghandlers(logging_level)
         self._install_signal_handlers()
 
         self.did_perform_work = False
@@ -135,14 +135,14 @@ class GeventWorker(Worker):
                 self.register_death()
         return self.did_perform_work
 
-    def work(self, burst=False):
+    def work(self, burst=False, logging_level=logging.INFO):
         """
         Spawning a greenlet to be able to kill it when it's blocked dequeueing job
         :param burst: if it's burst worker don't need to spawn a greenlet
         """
         # If the is a burst worker it's not needed to spawn greenlet
         if burst:
-            return self._work(burst)
+            return self._work(burst, logging_level=logging_level)
 
         self.gevent_worker = gevent.spawn(self._work, burst)
         self.gevent_worker.join()
