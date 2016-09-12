@@ -6,6 +6,7 @@ from gevent import monkey, get_hub
 from gevent.hub import LoopExit
 monkey.patch_all()
 
+import logging
 import signal
 import gevent
 import gevent.pool
